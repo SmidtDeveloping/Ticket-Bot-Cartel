@@ -1,0 +1,134 @@
+{
+	"commands": {
+		"ticket_manage": {
+			"no_specify": "Gelieve een sub-opdracht op te geven.",
+			"sub_commands": {
+				"setup": {
+					"already_exists": "Een ticketpaneel met die `{custom_id}` ID bestaat al.",
+					"created": "Ticketpaneel succesvol ingesteld.\n\n{panel_info}"
+				},
+				"delete": {
+					"not_exists": "Een ticketpaneel met die `{custom_id}` ID bestaat niet.",
+					"deleted": "Ticketpaneel succesvol verwijderd."
+				},
+				"list": {
+					"no_panels": "Er zijn geen ticketpanelen ingesteld.",
+					"description": "**Hier is de lijst van alle panelen:**",
+					"footer": "Momenteel op pagina {page} van {pages}."
+				},
+				"send": {
+					"no_panels": "Er zijn geen ticketpanelen ingesteld.",
+					"send_success": "Het ticketpaneel is succesvol verzonden!",
+					"embed_config": {
+						"separator": "{counter}: {name} - {emoji}",
+						"title": "Ondersteuningssysteem | Maak Ticket",
+						"description": "Door op een van de bijbehorende knopcategorieën in dit bericht te klikken, maak je een ticket met directe en privé toegang tot het personeel.\n\n__**Ondersteuningscategorieën**__\n{separator}\n\n__**Ticketinformatie**__\n`•` Lees de juiste **FAQ**-kanalen voordat je een ticket aanmaakt.\n`•` Misbruik van het ticketsysteem zal leiden tot **straffen**.",
+						"footer": "Gebruik de knoppen hieronder om een ticket te maken.",
+						"color": "AQUA"
+					}
+				}
+			}
+		},
+		"add": {
+			"success": "De gebruiker {user_mention} is aan het ticket toegevoegd.",
+			"user_already_in_ticket": "{user_mention} is al in dit ticket."
+		},
+		"remove": {
+			"user_removed": "De gebruiker {user_mention} is uit het ticket verwijderd.",
+			"user_not_in_ticket": "{user_mention} is niet in dit ticket."
+		},
+		"close": {
+			"closed_by": "{user_mention} heeft het ticket gesloten."
+		},
+		"open": {
+			"opened_by": "{user_mention} heeft het ticket geopend."
+		},
+		"rename": {
+			"success": "{user_mention} heeft het ticket hernoemd naar {new_name}."
+		},
+		"alert": {
+			"user_message": "Hallo {user_mention}, je hebt een open [ticket]({link}) en een staflid heeft je nodig om onmiddellijk te reageren\n\n**Ticketinformatie**\n » Ticketnaam: {channel_name}\n » Ticket Sinds: {openSince}\n » Ticketlink: {direct_link}",
+			"staff_message": "Ik heb zojuist een bericht naar de gebruiker gestuurd, wacht op zijn antwoord."
+		},
+		"claim": {
+			"already_claimed": "Dit ticket is al opgeëist door {user_mention}.",
+			"claimed": "Dit ticket is nu opgeëist door {user_mention}."
+		},
+		"giveto": {
+			"ticket_not_claimed": "Dit ticket is niet opgeëist.",
+			"ticket_not_claimed_by_you": "Dit ticket is niet door jou opgeëist.",
+			"ticket_given_to": "{author_mention} heeft het ticket aan {user_mention} gegeven."
+		}
+	},
+	"embeds": {
+		"message_ticket": {
+			"creating": "Ticket aanmaken...",
+			"created": "Ticket succesvol aangemaakt {channel_mention}!",
+			"title": "Ticket Aangemaakt | {panel_name} #{ticket_number}",
+			"description": "Hallo {member_username}, ons personeel zal je zo snel mogelijk antwoorden.\nIn de tussentijd, beschrijf je probleem hier zo gedetailleerd mogelijk.\n\n**Ticketpaneel:** {panel_name}\n**Ticket Eigenaar:** {member_mention}\n**Ticket Datum:** {ticket_date}",
+			"color": "AQUA"
+		}
+	},
+	"buttons": {
+		"close": {
+			"text": "Sluiten",
+			"emoji": "🔒",
+			"style": "SECONDARY",
+			"messages": {
+				"closed_ticket": "{user_mention} heeft het ticket gesloten.",
+				"closed_ticket_staff": "```Support ticketbediening```"
+			}
+		},
+		"claim": {
+			"text": "Claim",
+			"emoji": "👋",
+			"style": "SECONDARY",
+			"messages": {
+				"claimed_ticket": "{user_mention} heeft het ticket opgeëist."
+			}
+		},
+		"transcript": {
+			"text": "Transcriptie",
+			"emoji": "📑",
+			"style": "SECONDARY",
+			"messages": {
+				"saving_transcript": "Transcriptie opslaan...",
+				"transcript_saved": "Transcriptie succesvol opgeslagen!"
+			}
+		},
+		"open": {
+			"text": "Openen",
+			"emoji": "🔓",
+			"style": "SECONDARY",
+			"messages" : {
+				"ticket_opened": "{user_mention} heeft het ticket geopend."
+			}
+		},
+		"delete": {
+			"text": "Verwijderen",
+			"emoji": "⛔",
+			"style": "SECONDARY",
+			"messages": {
+				"deleting_ticket": "Dit ticket wordt in {time} seconden verwijderd."
+			}
+		}
+	},
+	"system": {
+		"bot_ready": "Bot is klaar",
+		"mongo_connected": "MongoDB verbonden"
+	},
+	"errors": {
+		"bad_mongo_uri": "MONGO_URI is niet ingesteld in config.json",
+		"command_not_found": "De {command} opdracht werd niet gevonden",
+		"server_without_tickets": "Deze server heeft geen gegevens voor het ticketsysteem.\nMaak een ticketpaneel aan met het commando `ticket-manage setup`",
+		"reached_max_tickets": "Je hebt het maximale aantal openstaande tickets bereikt.",
+		"channel_without_ticket": "Dit kanaal is geen ticketkanaal.",
+		"ticket_already_closed": "Dit ticket is al gesloten.",
+		"ticket_already_claimed": "Dit ticket is al door iemand anders opgeëist.",
+		"transcript_channel_not_found": "Het transcriptkanaal werd niet gevonden.",
+		"ticket_already_open": "Dit ticket is al geopend.",
+		"ticket_not_closed": "Dit ticket is niet gesloten.",
+		"no_staff_role": "Deze server heeft geen stafrol ingesteld.\nGebruik het `config` commando om de stafrol in te stellen.",
+		"no_permission": "Je hebt geen toestemming om deze opdracht te gebruiken."
+	}
+}

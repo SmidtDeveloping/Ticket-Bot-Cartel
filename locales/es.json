@@ -1,0 +1,134 @@
+{
+	"commands": {
+		"ticket_manage": {
+			"no_specify": "No se especificó ningún comando.",
+			"sub_commands": {
+				"setup": {
+					"already_exists": "Ya existe un ticket panel con el ID `{custom_id}`.",
+					"created": "Configuración del panel de tickets con éxito.\n\n{panel_info}"
+				},
+				"delete": {
+					"not_exists": "No existe un ticket panel con el ID `{custom_id}`.",
+					"deleted": "El ticket panel se eliminó con éxito."
+				},
+				"list": {
+					"no_panels": "No hay paneles de tickets configurados.",
+					"description": "**Aquí está una lista de todos los paneles:**",
+					"footer": "Actualmente está en la página {page} de {pages}."
+				},
+				"send": {
+					"no_panels": "No hay paneles de tickets configurados.",
+					"send_success": "El ticket panel se envió con éxito.",
+					"embed_config": {
+						"separator": "{counter}: {name} - {emoji}",
+						"title": "Sistema de soporte | Crear un ticket",
+						"description": "Al hacer clic en una de las categorías de botones correspondientes en este mensaje, creará un ticket con acceso directo y privado al personal.\n\n__**Categorias de Soporte**__\n{separator}\n\n__**Informacion de Tickets**__\n`•` Antes de crear un ticket, lea los cnales **FAQ** correspondientes.\n`•` El abuso del sistema de tickets dará lugar a **castigo(s)**",
+						"footer": "Utilice los botones a continuación para crear un boleto.",
+						"color": "AQUA"
+					}
+				}
+			}
+		},
+		"add": {
+			"success": "El usuario {user_mention} fue agregado con éxito.",
+			"user_already_in_ticket": "{user_mention} ya está en el ticket."
+		},
+		"remove": {
+			"user_removed": "El usuario {user_mention} fue removido con éxito.",
+			"user_not_in_ticket": "{user_mention} no está en el ticket."
+		},
+		"close": {
+			"closed_by": "{user_mention} ha cerrado el ticket."
+		},
+		"open": {
+			"opened_by": "{user_mention} ha abierto el ticket."
+		},
+		"rename": {
+			"success": "{user_mention} has renamed the ticket to {new_name}."
+		},
+		"alert": {
+			"user_message": "Hola, {user_mention}, tienes un [ticket]({link}) abierto y un miembro del personal necesita que lo respondas de inmediato\n\n**Información del ticket**\n » Nombre del ticket: {channel_name}\n » Ticket Desde: {openSince}\n » Enlace del ticket: {direct_link}",
+			"staff_message": "Acabo de enviar un mensaje al usuario, espere a que responda"
+		},
+		"claim": {
+			"already_claimed": "El ticket ya ha sido reclamado por {user_mention}.",
+			"claimed": "El ticket fue reclamado por {user_mention}."
+		},
+		"giveto": {
+			"ticket_not_claimed": "El ticket no ha sido reclamado.",
+			"ticket_not_claimed_by_you": "El ticket no ha sido reclamado por ti.",
+			"ticket_given_to": "{author_mention} ha dado el ticket a {user_mention}."
+		}
+	},
+	"embeds": {
+		"message_ticket": {
+			"creating": "Creando ticket...",
+			"created": "Ticket creado con éxito {channel_mention}.",
+			"title": "Ticket creado | {panel_name} #{ticket_number}",
+			"description": "Hola {member_username}, nuestro personal le responderá lo más rápido posible.\nMientras tanto, describa su problema aquí con el mayor detalle posible.\n\n**Ticket Panel:** {panel_name}\n**Dueño del ticket::** {member_mention}\n**Fecha del Ticket:** {ticket_date}",
+			"color": "AQUA"
+		}
+	},
+	"buttons": {
+		"close": {
+			"text": "Cerrar",
+			"emoji": "🔒",
+			"style": "SECONDARY",
+			"messages": {
+				"closed_ticket": "{user_mention} ha cerrado el ticket.",
+				"closed_ticket_staff": "```Controles del equipo de Soporte```"
+			}
+		},
+		"claim": {
+			"text": "Claim",
+			"emoji": "👋",
+			"style": "SECONDARY",
+			"messages": {
+				"claimed_ticket": "{user_mention} ha reclamado el ticket."
+			}
+		},
+		"transcript": {
+			"text": "Transcript",
+			"emoji": "📑",
+			"style": "SECONDARY",
+			"messages": {
+				"saving_transcript": "Guardando transcripción...",
+				"transcript_saved": "Transcripción guardada con éxito."
+			}
+		},
+		"open": {
+			"text": "Abrir",
+			"emoji": "🔓",
+			"style": "SECONDARY",
+			"messages": {
+				"ticket_opened": "{user_mention} ha abierto el ticket."
+			}
+		},
+		"delete": {
+			"text": "Borrar",
+			"emoji": "⛔",
+			"style": "SECONDARY",
+			"messages": {
+				"deleting_ticket": "Este ticket será borrado en {time} segundos."
+			}
+		}
+	},
+	"system": {
+		"bot_ready": "El bot esta listo",
+		"mongo_connected": "MongoDB conectada"
+	},
+	"errors": {
+		"bad_mongo_uri": "MONGO_URI no está configurado en config.json",
+		"command_not_found": "No se encontró el comando {comando}",
+		"server_without_tickets": "Este servidor no tiene datos para el sistema de tickets.\nPor favor, crea un panel de tickets usando el comando `ticket-manage setup`",
+		"reached_max_tickets": "Has alcanzado el número máximo de tickets permitidos.",
+		"channel_without_ticket": "Este canal no es un canal de ticket.",
+		"ticket_already_closed": "El ticket ya está cerrado.",
+		"ticket_already_claimed": "El ticket ya está reclamado por otro usuario.",
+		"transcript_channel_not_found": "No se encontró el canal de transcripción.",
+		"ticket_already_open": "El ticket ya está abierto.",
+		"ticket_not_closed": "El ticket no está cerrado.",
+		"no_staff_role": "Este servidor no tiene configurado un rol de personal.\nUtilice el comando `config` para configurar el rol de personal.",
+		"no_permission": "Usted no tiene permiso para ejecutar este comando."
+	}
+}
