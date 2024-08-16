@@ -1,10 +1,21 @@
-const { CommandInteraction, MessageEmbed } = require("discord.js");
+const { Client, CommandInteraction, MessageEmbed } = require("discord.js");
 const { isTicket } = require("../../controllers/ticketChecks");
 
+
 module.exports = {
-	name: "claim",
-	description: "Claim a ticket",
+
+	name: "move",
+	description: "Move de ticket naar een andere category",
 	type: 'CHAT_INPUT',
+    options: [
+        {
+            name: 'category',
+            description: 'Select a category',
+            type: 3,
+            required: true
+        }
+    ]
+,
 	/**
 	 *
 	 * @param {import("../..").Bot} client
@@ -12,6 +23,7 @@ module.exports = {
 	 * @param {String[]} args
 	 */
 	run: async (client, interaction, args) => {
+		const user = interaction.options.getString('category');
 		const ticketData = await isTicket(interaction);
 		if (!ticketData) {
 			return interaction.reply({embeds: [
@@ -22,38 +34,25 @@ module.exports = {
 			], ephemeral: true});
 		}
 
-		if (ticketData.isClaimed) {
+		if (ticketData.staffClaimed !== interaction.user.id) {
 			return interaction.reply({embeds: [
 				new MessageEmbed()
 					.setTitle("Ticket System \❌")
-					.setDescription(client.languages.__mf("commands.claim.already_claimed", {
-						user_mention: `<@!${ticketData.staffClaimed}>`
-					}))
+					.setDescription(client.languages.__("commands.giveto.ticket_not_claimed_by_you"))
 					.setColor("RED")
 			], ephemeral: true});
 		}
 
-		// ticketData.staffRoles.forEach((role) => {
-		// 	const staffRole = interaction.guild.roles.cache.get(role);
-		// 	if (staffRole) {
-		// 		interaction.channel.permissionOverwrites.edit(role, {
-		// 			VIEW_CHANNEL: false
-		// 		});
-		// 	}
-		// });
-
-		ticketData.staffClaimed = interaction.user.id;
-		ticketData.isClaimed = true;
-		await ticketData.save();
+		
 
 		interaction.reply({embeds: [
 			new MessageEmbed()
 				.setTitle("Ticket System \✅")
-				.setDescription(client.languages.__mf("commands.claim.claimed", {
-					user_mention: `<@!${interaction.user.id}>`,
-					user_tag: interaction.user.tag
+				.setDescription(client.languages.__mf("commands.move.ticket_moved_to", {
+					user_mention: `<@${interaction.user.id}>`,
+					cat: `<#${user}>`
 				}))
 				.setColor("GREEN")
-		], ephemeral: false});
+		]})
 	},
 };

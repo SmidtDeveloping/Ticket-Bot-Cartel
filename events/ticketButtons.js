@@ -101,11 +101,11 @@ client.on("interactionCreate", async (interaction) => {
 				VIEW_CHANNEL: true
 			});
 			
-			userData.staffRoles.forEach((user) => {
-				interaction.channel.permissionOverwrites.edit((user), {
-					VIEW_CHANNEL: false
-				});
-			});
+			// userData.staffRoles.forEach((user) => {
+			// 	interaction.channel.permissionOverwrites.edit((user), {
+			// 		VIEW_CHANNEL: false
+			// 	});
+			// });
 
 			interaction.channel.send({embeds: [
 				new MessageEmbed()

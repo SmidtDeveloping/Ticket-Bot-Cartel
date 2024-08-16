@@ -58,6 +58,10 @@
 			"ticket_not_claimed": "Dit ticket is niet opgeëist.",
 			"ticket_not_claimed_by_you": "Dit ticket is niet door jou opgeëist.",
 			"ticket_given_to": "{author_mention} heeft het ticket aan {user_mention} gegeven."
+		},
+		"move": {
+			"ticket_not_claimed_by_you": "Dit ticket is niet door jou opgeëist.",
+			"ticket_moved_to": "{author_mention} heeft het ticket gelinkt aan {cat}"
 		}
 	},
 	"embeds": {
