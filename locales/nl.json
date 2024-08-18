@@ -61,7 +61,11 @@
 		},
 		"move": {
 			"ticket_not_claimed_by_you": "Dit ticket is niet door jou opgeëist.",
-			"ticket_moved_to": "{author_mention} heeft het ticket gelinkt aan {cat}"
+			"ticket_moved_to": "{user_mention} heeft de ticket gelinkt aan {cat}",
+			"nocat": "Categorie bestaat niet"
+		},
+		"forceClaim": {
+			"tolow": "Alleen robbie kan dit"
 		}
 	},
 	"embeds": {
@@ -104,7 +108,7 @@
 			"text": "Openen",
 			"emoji": "🔓",
 			"style": "SECONDARY",
-			"messages" : {
+			"messages": {
 				"ticket_opened": "{user_mention} heeft het ticket geopend."
 			}
 		},
@@ -133,6 +137,9 @@
 		"ticket_already_open": "Dit ticket is al geopend.",
 		"ticket_not_closed": "Dit ticket is niet gesloten.",
 		"no_staff_role": "Deze server heeft geen stafrol ingesteld.\nGebruik het `config` commando om de stafrol in te stellen.",
-		"no_permission": "Je hebt geen toestemming om deze opdracht te gebruiken."
+		"no_permission": "Je hebt geen toestemming om deze opdracht te gebruiken.",
+		"move": {
+			"nocat": "errors.move.nocat"
+		}
 	}
 }

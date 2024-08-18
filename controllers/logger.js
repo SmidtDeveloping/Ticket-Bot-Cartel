@@ -19,9 +19,6 @@ function sendMessageToWebhook(message) {
 		  };
 	
 		  axios.post(webhook, messagePayload)
-	  .then(response => {
-		console.log('Bericht succesvol verzonden:', response.data);
-	  })
 	  .catch(error => {
 		console.error('Fout bij verzenden van bericht:', error);
 	  });
@@ -30,7 +27,7 @@ function debug(message) {
 	const date = new Date();
 	const dateString = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
 	console.log(chalk.blue(`[${dateString}] [DEBUG] ${message}`));
-	sendMessageToWebhook(chalk.blue(`[${dateString}] [DEBUG] ${message}`))
+	// sendMessageToWebhook(chalk.blue(`[${dateString}] [DEBUG] ${message}`))
 }
 
 /**
@@ -52,8 +49,8 @@ function warn(message) {
 function error(message) {
 	const date = new Date();
 	const dateString = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-	console.log(chalk.red(`[${dateString}] [ERROR] ${message}`));
 	sendMessageToWebhook(chalk.red(`[${dateString}] [ERROR] ${message}`))
+	console.log(chalk.red(`[${dateString}] [ERROR] ${message}`));
 }
 
 /**
