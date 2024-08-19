@@ -29,9 +29,9 @@ client.on("interactionCreate", async (interaction) => {
 						.setColor("RED")
 				], ephemeral: true});
 			}
-			interaction.channel.permissionOverwrites.edit(userData.ownerID, {
-				VIEW_CHANNEL: false,
-			});
+			// interaction.channel.permissionOverwrites.edit(userData.ownerID, {
+			// 	VIEW_CHANNEL: true,
+			// });
 			userData.usersInTicket.forEach((user) => {
 				interaction.channel.permissionOverwrites.edit(user, {
 					VIEW_CHANNEL: false,
