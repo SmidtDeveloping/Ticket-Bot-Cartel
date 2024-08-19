@@ -2,28 +2,33 @@ const { MessageEmbed, TextChannel, MessageActionRow, MessageButton } = require("
 const client = require("../index");
 const dataGuild = require("../models/dataGuild");
 const dataTicket = require("../models/dataTicket");
+const { debug } = require("../controllers/logger");
 
-client.on("interactionCreate", async (interaction) =>  {
+client.on("interactionCreate", async (interaction) => {
 	if (interaction.isButton()) {
 		const isTicket = interaction.customId.split("-")[0] === "ticket";
 		if (isTicket) {
 			const buttonID = interaction.customId.split("-")[1];
 			const guildData = await dataGuild.findOne({ guildID: interaction.guild.id });
 			if (!guildData) {
-				return interaction.followUp({embeds: [
-					new MessageEmbed()
-						.setTitle("Ticket System \❌")
-						.setDescription(client.languages.__("errors.server_without_tickets"))
-						.setColor("RED")
-				]});
+				return interaction.followUp({
+					embeds: [
+						new MessageEmbed()
+							.setTitle("Ticket System \❌")
+							.setDescription(client.languages.__("errors.server_without_tickets"))
+							.setColor("RED")
+					]
+				});
 			}
 			if (!guildData.tickets || guildData.tickets.length <= 0) {
-				return interaction.followUp({embeds: [
-					new MessageEmbed()
-						.setTitle("Ticket System \❌")
-						.setDescription(client.languages.__("errors.server_without_tickets"))
-						.setColor("RED")
-				]});
+				return interaction.followUp({
+					embeds: [
+						new MessageEmbed()
+							.setTitle("Ticket System \❌")
+							.setDescription(client.languages.__("errors.server_without_tickets"))
+							.setColor("RED")
+					]
+				});
 			}
 			const guildTickets = guildData.tickets.map(ticket => ticket.customID);
 			if (!guildTickets.includes(buttonID)) return;
@@ -37,12 +42,14 @@ client.on("interactionCreate", async (interaction) =>  {
 				}
 			});
 
-			await interaction.reply({embeds: [
-				new MessageEmbed()
-					.setTitle("Ticket System \✅")
-					.setDescription(client.languages.__("embeds.message_ticket.creating"))
-					.setColor("ORANGE")
-			], ephemeral: true});
+			await interaction.reply({
+				embeds: [
+					new MessageEmbed()
+						.setTitle("Ticket System \✅")
+						.setDescription(client.languages.__("embeds.message_ticket.creating"))
+						.setColor("ORANGE")
+				], ephemeral: true
+			});
 
 			const userTickets = await dataTicket.find({
 				guildID: interaction.guild.id,
@@ -50,12 +57,14 @@ client.on("interactionCreate", async (interaction) =>  {
 			});
 
 			if (userTickets.length >= guildData.maxTickets) {
-				return interaction.editReply({embeds: [
-					new MessageEmbed()
-						.setTitle("Ticket System \❌")
-						.setDescription(client.languages.__("errors.reached_max_tickets"))
-						.setColor("RED")
-				]});
+				return interaction.editReply({
+					embeds: [
+						new MessageEmbed()
+							.setTitle("Ticket System \❌")
+							.setDescription(client.languages.__("errors.reached_max_tickets"))
+							.setColor("RED")
+					]
+				});
 			}
 			const ticketNumber = await getTicketNumber(guildData.ticketCounter, dataGuild, interaction.guild.id);
 			await interaction.guild.channels.create(`ticket-${ticketNumber}`, {
@@ -73,59 +82,99 @@ client.on("interactionCreate", async (interaction) =>  {
 					...ticketRoles
 				]
 			}).then(async (channel) => {
-				channel.send({embeds: [
-					new MessageEmbed()
-						.setTitle(client.languages.__mf("embeds.message_ticket.title", {
-							ticket_number: ticketNumber,
-							panel_name: ticketData.panelName
-						}))
-						.setDescription(client.languages.__mf("embeds.message_ticket.description", {
-							ticket_number: ticketNumber,
-							ticket_date: `<t:${(Math.floor(Date.now() / 1000))}:R>`,
-							panel_name: ticketData.panelName,
-							member_username: interaction.user.username,
-							member_mention: `<@${interaction.user.id}>`,
-						}))
-						.setColor(client.languages.__("embeds.message_ticket.color"))
-				], components: [
-					new MessageActionRow().addComponents(
-						new MessageButton()
-							.setLabel(client.languages.__("buttons.close.text"))
-							.setEmoji(client.languages.__("buttons.close.emoji"))
-							.setStyle(client.languages.__("buttons.close.style"))
-							.setCustomId("btn-close-ticket-opn"),
-						new MessageButton()
-							.setLabel(client.languages.__("buttons.claim.text"))
-							.setEmoji(client.languages.__("buttons.claim.emoji"))
-							.setStyle(client.languages.__("buttons.claim.style"))
-							.setCustomId("btn-claim-ticket-opn")
-					)
-				], content: guildData.mentionStaff ? `<@!${interaction.user.id}> | <@&${guildData.mentionStaff}>` : `<@!${interaction.user.id}>`});
+
+			
+				channel.send({
+					embeds: [
+						new MessageEmbed()
+							.setTitle(client.languages.__mf("embeds.message_ticket.title", {
+								ticket_number: ticketNumber,
+								panel_name: ticketData.panelName
+							}))
+							.setDescription(client.languages.__mf("embeds.message_ticket.description", {
+								ticket_number: ticketNumber,
+								ticket_date: `<t:${(Math.floor(Date.now() / 1000))}:R>`,
+								panel_name: ticketData.panelName,
+								member_username: interaction.user.username,
+								member_mention: `<@${interaction.user.id}>`,
+							}))
+							.setColor(client.languages.__("embeds.message_ticket.color"))
+					], components: [
+						new MessageActionRow().addComponents(
+							new MessageButton()
+								.setLabel(client.languages.__("buttons.close.text"))
+								.setEmoji(client.languages.__("buttons.close.emoji"))
+								.setStyle(client.languages.__("buttons.close.style"))
+								.setCustomId("btn-close-ticket-opn"),
+							new MessageButton()
+								.setLabel(client.languages.__("buttons.claim.text"))
+								.setEmoji(client.languages.__("buttons.claim.emoji"))
+								.setStyle(client.languages.__("buttons.claim.style"))
+								.setCustomId("btn-claim-ticket-opn")
+						)
+					], content: guildData.mentionStaff ? `<@!${interaction.user.id}> | <@&${guildData.mentionStaff}>` : `<@!${interaction.user.id}>`
+				});
+				if (ticketData.panelCategory === "1273755545760956527") {
+					debug("Channel send!")
+					channel.send(`
+	***Cartél Da Ílha Sollicitatie***
+
+Wil jij deel uitmaken van **Cartél Da Ílha**? Vul dan onderstaande informatie in en stuur je sollicitatie in.
+
+**Gegevens:**
+- Naam:
+- Leeftijd:
+**
+Vragen:**
+
+1. Waarom wil je bij Cartél Da Ílha horen?
+2.Wat kan jij bijdragen aan onze gang?
+3.Heb je eerdere ervaringen met gangs of vergelijkbare groepen? Zo ja, welke?
+4.Wat zijn jouw speciale vaardigheden of talenten?
+
+**Verificatie:**
+- Ben je bereid een achtergrondcheck te ondergaan? (Ja/Nee)
+- Kun je een betrouwbare referentie opgeven? (Ja/Nee)
+
+**Extra informatie:**
+Voeg hier eventueel nog extra informatie toe die je met ons wilt delen.
+
+Stuur je sollicitatie in de ticket. 
+We zullen je zo snel mogelijk laten weten of je bent geselecteerd voor een gesprek.
+
+**TICKET SUPPORT HEEFT AL EEN TAG GEHAD TAG ZE NIET NOG EEN KEER**
+						
+						`)
+				}
 
 				const newTicket = new dataTicket({
 					guildID: interaction.guild.id,
-    				ownerID: interaction.user.id,
-    				channelName: channel.name,
-    				channelID: channel.id,
-    				ticketPanel: ticketData.panelName,
-    				parentID: ticketData.panelCategory,
-    				dateCreated: Date.now(),
-    				isClosed: false,
-    				isClaimed: false,
-    				staffClaimed: null,
-    				staffRoles: ticketRoles.map(x => x.id),
+					ownerID: interaction.user.id,
+					channelName: channel.name,
+					channelID: channel.id,
+					ticketPanel: ticketData.panelName,
+					parentID: ticketData.panelCategory,
+					dateCreated: Date.now(),
+					isClosed: false,
+					isClaimed: false,
+					staffClaimed: null,
+					staffRoles: ticketRoles.map(x => x.id),
 				});
 				await newTicket.save();
 
-				interaction.editReply({embeds: [
-					new MessageEmbed()
-						.setTitle("Ticket System \✅")
-						.setDescription(client.languages.__mf("embeds.message_ticket.created", {
-							channel_mention: `<#${channel.id}>`,
-							channel_id: channel.id
-						}))
-						.setColor("GREEN")
-				]})
+				
+
+				interaction.editReply({
+					embeds: [
+						new MessageEmbed()
+							.setTitle("Ticket System \✅")
+							.setDescription(client.languages.__mf("embeds.message_ticket.created", {
+								channel_mention: `<#${channel.id}>`,
+								channel_id: channel.id
+							}))
+							.setColor("GREEN")
+					]
+				})
 			});
 		}
 	}

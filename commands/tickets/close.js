@@ -74,6 +74,6 @@ module.exports = {
 					.setEmoji(client.languages.__("buttons.delete.emoji"))
 					.setStyle(client.languages.__("buttons.delete.style"))
 			)
-		]});
+		], content: "Verder nog vragen?"});
 	},
 };

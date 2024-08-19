@@ -72,7 +72,7 @@ client.on("interactionCreate", async (interaction) => {
 						.setEmoji(client.languages.__("buttons.delete.emoji"))
 						.setStyle(client.languages.__("buttons.delete.style"))
 				)
-			]});
+			], content: "Verder nog vragen?"});
 		} else if (buttonID === "claim-ticket-opn") {
 			await interaction.deferUpdate();
 			const userData = await dataTicket.findOne({
