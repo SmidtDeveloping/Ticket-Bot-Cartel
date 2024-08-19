@@ -1,6 +1,6 @@
 const { Client, CommandInteraction, MessageEmbed } = require("discord.js");
 const { isTicket } = require("../../controllers/ticketChecks");
-const { debug } = require("../../controllers/logger");
+const { debug, error } = require("../../controllers/logger");
 const staffInfo = [
 	{ name: "Julian", categoryId: "1274082388124897361", linkedUserId: "1190271775649562658" },
 	{ name: "Robbie", categoryId: "1274729411089924179", linkedUserId: "1190271775649562658" },
@@ -80,6 +80,10 @@ module.exports = {
             // Fetch the channel from ticketData
             const ticketChannel = await interaction.guild.channels.fetch(ticketData.channelID);
             debug(`Fetched Channel ID: ${ticketChannel.id}, Name: ${ticketChannel.name}`);
+            await ticketChannel.setParent(category);
+            ticketData.parentID = category
+            debug(`Channel moved to category ID: ${category}`);
+            
 
             // Log current permission overwrites
             const currentPermissions = ticketChannel.permissionOverwrites.cache.map((overwrite) => ({
@@ -87,43 +91,41 @@ module.exports = {
                 allow: overwrite.allow.toArray(),
                 deny: overwrite.deny.toArray()
             }));
-            debug(`Current Permissions: ${JSON.stringify(currentPermissions)}`);
 
             // Fetch owner user object
             const owner = await interaction.guild.members.fetch(ticketData.ownerID);
-            debug(`Owner ID: ${owner.id}, Username: ${owner.user.username}`);
 
             // Set permission to view channel
-            await ticketChannel.permissionOverwrites.edit(owner.id, {
+            await ticketChannel.permissionOverwrites.create(owner.id, {
                 VIEW_CHANNEL: true
-            });
-            debug(`Updated permission for ${owner.user.username} to VIEW_CHANNEL: true`);
+            }).then(() => {
+                debug(`Updated permission for ${owner.user.username} to VIEW_CHANNEL: true`);
+            })
+            await ticketChannel.permissionOverwrites.create(interaction.guild.id, {
+                VIEW_CHANNEL: false
+            }).then(() => {
+                debug(`Updated permission for everyone to VIEW_CHANNEL: false`);
+            })
 
             // Log permissions after setting
-            const permissionsAfter = ticketChannel.permissionOverwrites.cache.get(owner.id);
-            debug(`Permissions after for ${owner.user.username}: ${permissionsAfter ? JSON.stringify(permissionsAfter) : 'No permissions set'}`);
 
             addedUsers.push(owner.user.username);
 
             // Remove permissions for all users in the ticketData.usersInTicket
             for (const id of ticketData.usersInTicket) {
                 const member = await interaction.guild.members.fetch(id);
-                debug(`Removing permissions for ID: ${member.id}, Username: ${member.user.username}`);
 
                 // Log current permissions before changing
-                const permissionsBeforeRemoval = ticketChannel.permissionOverwrites.cache.get(member.id);
-                debug(`Permissions before removal for ${member.user.username}: ${permissionsBeforeRemoval ? JSON.stringify(permissionsBeforeRemoval) : 'No permissions set'}`);
-
-                await ticketChannel.permissionOverwrites.edit(member.id, {
+    
+                await ticketChannel.permissionOverwrites.delete(member.id, {
                     VIEW_CHANNEL: false
-                });
+                }).then(() => {
+                    debug(`Updated permission for ${member.user.username} to VIEW_CHANNEL: false`);
+                })
                 ticketData.usersInTicket.remove(member.id);
 		        ticketData.save();
-                debug(`Updated permission for ${member.user.username} to VIEW_CHANNEL: false`);
 
                 // Log permissions after setting
-                const permissionsAfterRemoval = ticketChannel.permissionOverwrites.cache.get(member.id);
-                debug(`Permissions after removal for ${member.user.username}: ${permissionsAfterRemoval ? JSON.stringify(permissionsAfterRemoval) : 'No permissions set'}`);
 
                 removedUsers.push(member.user.username);
             }
@@ -131,23 +133,20 @@ module.exports = {
             
 
             const staffMember = staffInfo.find(staff => staff.categoryId === category);
-
+            console.log(staffMember);
+            
             if (staffMember) {
                 const staffUser = await interaction.guild.members.fetch(staffMember.linkedUserId);
-                debug(`Adding permissions for ID: ${staffUser.id}, Username: ${staffUser.user.username}`);
 
                 // Log current permissions before changing
-                const permissionsBeforeAddition = ticketChannel.permissionOverwrites.cache.get(staffUser.id);
-                debug(`Permissions before addition for ${staffUser.user.username}: ${permissionsBeforeAddition ? JSON.stringify(permissionsBeforeAddition) : 'No permissions set'}`);
 
-                await ticketChannel.permissionOverwrites.edit(staffUser.id, {
+                await ticketChannel.permissionOverwrites.create(staffUser.id, {
                     VIEW_CHANNEL: true
-                });
-                debug(`Updated permission for ${staffUser.user.username} to VIEW_CHANNEL: true`);
+                }).then(() => {
+                    debug(`Updated permission for ${staffUser.user.username} to VIEW_CHANNEL: true`);
+                })
 
                 // Log permissions after setting
-                const permissionsAfterAddition = ticketChannel.permissionOverwrites.cache.get(staffUser.id);
-                debug(`Permissions after addition for ${staffUser.user.username}: ${permissionsAfterAddition ? JSON.stringify(permissionsAfterAddition) : 'No permissions set'}`);
 
                 addedUsers.push(staffUser.user.username);
             } else {
@@ -162,9 +161,7 @@ module.exports = {
             debug(`Current Permissions: ${JSON.stringify(NewPerms)}`);
 
             // Move the channel to the selected category
-            await ticketChannel.setParent(category);
-            debug(`Channel moved to category ID: ${category}`);
-      
+            
             // Reply with an embed containing the removed and added users
             const embed = new MessageEmbed()
                 .setTitle("Ticket System \✅")
