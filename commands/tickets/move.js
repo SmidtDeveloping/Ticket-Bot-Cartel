@@ -167,7 +167,7 @@ module.exports = {
                 .setTitle("Ticket System \✅")
                 .setDescription(client.languages.__mf("commands.move.ticket_moved_to", {
                     user_mention: `${interaction.user.username}`,
-                    cat: `<#${category}>`
+                    cat: `${staffMember.name}`
                 }))
                 .setColor("GREEN")
                 .addField("Removed Users", removedUsers.length ? removedUsers.join('\n') : "None", true)
