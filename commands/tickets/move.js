@@ -176,7 +176,7 @@ module.exports = {
             removedUsers.length = 0; // Clear removedUsers array
             addedUsers.length = 0;   // Clear addedUsers array
 
-            return interaction.reply({ embeds: [embed] });
+            return interaction.reply({ embeds: [embed], content: `<@${staffMember.linkedUserId}>` });
 
         } catch (error) {
             debug(`Error moving ticket: ${error.message}`);
