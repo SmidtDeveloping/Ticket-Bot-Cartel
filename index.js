@@ -3,7 +3,7 @@ const { Client, Collection } = require("discord.js");
 const { version } = require('./package.json');
 const { readdirSync } = require("fs");
 const { join } = require("path");
-
+require("dotenv").config({path: "./config/token.env"})
 if (process.version.slice(1).split(".")[0] < 16) {
     error(`Please update to Node 16 or higher.`);
     process.exit(1);
@@ -72,4 +72,4 @@ module.exports = client;
 // Initializing the project
 require("./handler")(client);
 
-client.login(client.config.TOKEN);
+client.login(process.env.TOKEN);
