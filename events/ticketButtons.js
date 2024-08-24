@@ -3,7 +3,56 @@ const { createTranscript } = require("discord-html-transcripts");
 const dataTicket = require("../models/dataTicket");
 const dataGuild = require("../models/dataGuild");
 const client = require("..");
-
+const { debug } = require("../controllers/logger");
+async function func_createTranscript(interaction) {
+			const userData = await dataTicket.findOne({
+				guildID: interaction.guild.id,
+				channelID: interaction.channel.id
+			});
+			const guildData = await dataGuild.findOne({
+				guildID: interaction.guild.id
+			});
+			if (!userData) {
+				return interaction.followUp({embeds: [
+					new MessageEmbed()
+						.setTitle("Ticket System \❌")
+						.setDescription(client.languages.__("errors.channel_without_ticket"))
+						.setColor("RED")
+				], ephemeral: true});
+			}
+			const transcriptChannel = interaction.guild.channels.cache.get(guildData?.transcriptChannel);
+			if (!transcriptChannel) {
+				return interaction.followUp({embeds: [
+					new MessageEmbed()
+						.setTitle("Ticket System \❌")
+						.setDescription(client.languages.__("errors.transcript_channel_not_found"))
+						.setColor("RED")
+				], ephemeral: true});
+			}
+			const transcript = await createTranscript(interaction.channel, {
+				fileName: `transcript-${interaction.channel.name}.html`,
+				limit: -1,
+				returnBuffer: false
+			}).then(() => {
+				debug("Transcript opgeslagen")
+			})
+			const member = interaction.guild.members.cache.get(userData.ownerID);
+			await transcriptChannel.send({embeds: [
+				new MessageEmbed()
+					.setAuthor({name: member.user.tag, iconURL: member.user.displayAvatarURL({dynamic: true})})
+					.addField("Ticket Owner", `<@${userData.ownerID}>`, true)
+					.addField("Ticket Name", interaction.channel.name, true)
+					.setColor("ORANGE")
+			], files: [transcript]}).then((msg) =>  {
+				msg.edit({embeds: [
+					msg.embeds[0]
+						.addField("Panel Name", `${userData.ticketPanel}`, true)
+						.addField("Direct Transcript", `[Direct Transcript](${msg.attachments.first().url})`, true)
+						.addField("Ticket Closed", interaction.user.tag, true)
+						.setColor("GREEN")
+				]});
+			});
+}
 client.on("interactionCreate", async (interaction) => {
 	if (interaction.isButton()) {
 		const buttonID = interaction.customId.split("btn-")[1];
@@ -39,7 +88,7 @@ client.on("interactionCreate", async (interaction) => {
 			});
 			userData.isClosed = true;
 			await userData.save();
-
+			func_createTranscript(interaction)
 			return interaction.channel.send({embeds: [
 				new MessageEmbed()
 					.setTitle("Ticket System \✅")
@@ -56,11 +105,11 @@ client.on("interactionCreate", async (interaction) => {
 			], components: [
 				new MessageActionRow().addComponents(
 					// transcript, open, delete
-					new MessageButton()
-						.setCustomId("btn-transcript-ticket")
-						.setLabel(client.languages.__("buttons.transcript.text"))
-						.setEmoji(client.languages.__("buttons.transcript.emoji"))
-						.setStyle(client.languages.__("buttons.transcript.style")),
+					// new MessageButton()
+					// 	.setCustomId("btn-transcript-ticket")
+					// 	.setLabel(client.languages.__("buttons.transcript.text"))
+					// 	.setEmoji(client.languages.__("buttons.transcript.emoji"))
+					// 	.setStyle(client.languages.__("buttons.transcript.style")),
 					new MessageButton()
 						.setCustomId("btn-open-ticket")
 						.setLabel(client.languages.__("buttons.open.text"))
@@ -72,7 +121,7 @@ client.on("interactionCreate", async (interaction) => {
 						.setEmoji(client.languages.__("buttons.delete.emoji"))
 						.setStyle(client.languages.__("buttons.delete.style"))
 				)
-			], content: "Verder nog vragen?"});
+			], content: ` <@${userData.ownerID}> Verder nog vragen? Nee, klik delete`});
 		} else if (buttonID === "claim-ticket-opn") {
 			await interaction.deferUpdate();
 			const userData = await dataTicket.findOne({
@@ -121,63 +170,7 @@ client.on("interactionCreate", async (interaction) => {
 			userData.staffClaimed = interaction.user.id;
 			await userData.save();
 		} else if (buttonID === "transcript-ticket") {
-			await interaction.deferUpdate();
-			const userData = await dataTicket.findOne({
-				guildID: interaction.guild.id,
-				channelID: interaction.channel.id
-			});
-			const guildData = await dataGuild.findOne({
-				guildID: interaction.guild.id
-			});
-			if (!userData) {
-				return interaction.followUp({embeds: [
-					new MessageEmbed()
-						.setTitle("Ticket System \❌")
-						.setDescription(client.languages.__("errors.channel_without_ticket"))
-						.setColor("RED")
-				], ephemeral: true});
-			}
-			const transcriptChannel = interaction.guild.channels.cache.get(guildData?.transcriptChannel);
-			if (!transcriptChannel) {
-				return interaction.followUp({embeds: [
-					new MessageEmbed()
-						.setTitle("Ticket System \❌")
-						.setDescription(client.languages.__("errors.transcript_channel_not_found"))
-						.setColor("RED")
-				], ephemeral: true});
-			}
-			const firstMessage = await interaction.channel.send({embeds: [
-				new MessageEmbed()
-					.setTitle("Ticket System \✅")
-					.setDescription(client.languages.__("buttons.transcript.messages.saving_transcript"))
-					.setColor("ORANGE")
-			]})
-			const transcript = await createTranscript(interaction.channel, {
-				fileName: `transcript-${interaction.channel.name}.html`,
-				limit: -1,
-				returnBuffer: false
-			});
-			const member = interaction.guild.members.cache.get(userData.ownerID);
-			await transcriptChannel.send({embeds: [
-				new MessageEmbed()
-					.setAuthor({name: member.user.tag, iconURL: member.user.displayAvatarURL({dynamic: true})})
-					.addField("Ticket Owner", `<@${userData.ownerID}>`, true)
-					.addField("Ticket Name", interaction.channel.name, true)
-					.setColor("ORANGE")
-			], files: [transcript]}).then((msg) =>  {
-				msg.edit({embeds: [
-					msg.embeds[0]
-						.addField("Panel Name", `${userData.ticketPanel}`, true)
-						.addField("Direct Transcript", `[Direct Transcript](${msg.attachments.first().url})`, true)
-						.addField("Ticket Closed", interaction.user.tag, true)
-						.setColor("GREEN")
-				]});
-				firstMessage.edit({embeds: [
-					firstMessage.embeds[0]
-						.setDescription(client.languages.__("buttons.transcript.messages.transcript_saved"))
-						.setColor("GREEN")
-				]});
-			});
+			// Nee
 
 		} else if (buttonID === "open-ticket") {
 			await interaction.deferUpdate();

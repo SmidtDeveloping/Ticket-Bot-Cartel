@@ -58,11 +58,11 @@ module.exports = {
 		], components: [
 			new MessageActionRow().addComponents(
 				// transcript, open, delete
-				new MessageButton()
-					.setCustomId("btn-transcript-ticket")
-					.setLabel(client.languages.__("buttons.transcript.text"))
-					.setEmoji(client.languages.__("buttons.transcript.emoji"))
-					.setStyle(client.languages.__("buttons.transcript.style")),
+				// new MessageButton()
+				// 	.setCustomId("btn-transcript-ticket")
+				// 	.setLabel(client.languages.__("buttons.transcript.text"))
+				// 	.setEmoji(client.languages.__("buttons.transcript.emoji"))
+				// 	.setStyle(client.languages.__("buttons.transcript.style")),
 				new MessageButton()
 					.setCustomId("btn-open-ticket")
 					.setLabel(client.languages.__("buttons.open.text"))
@@ -74,6 +74,6 @@ module.exports = {
 					.setEmoji(client.languages.__("buttons.delete.emoji"))
 					.setStyle(client.languages.__("buttons.delete.style"))
 			)
-		], content: "Verder nog vragen?"});
+		], content: ` <@${ticketData.ownerID}> Verder nog vragen? Nee, klik delete`});
 	},
 };
