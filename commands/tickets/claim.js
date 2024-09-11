@@ -1,5 +1,6 @@
 const { CommandInteraction, MessageEmbed } = require("discord.js");
 const { isTicket } = require("../../controllers/ticketChecks");
+const sendLog = require("../../handler/discordlogger");
 
 module.exports = {
 	name: "claim",
@@ -43,6 +44,11 @@ module.exports = {
 		ticketData.staffClaimed = interaction.user.id;
 		ticketData.isClaimed = true;
 		await ticketData.save();
+
+		sendLog("goed", client.languages.__mf("commands.claim.log", {
+			user_mention: `<@!${interaction.user.id}>`,
+			channel: `<#${interaction.channel.id}>`
+		}))
 
 		interaction.reply({
 			embeds: [

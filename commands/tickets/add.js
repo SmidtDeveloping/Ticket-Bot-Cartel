@@ -1,5 +1,6 @@
 const { CommandInteraction, MessageEmbed } = require("discord.js");
 const { isTicket } = require("../../controllers/ticketChecks");
+const sendLog = require("../../handler/discordlogger");
 
 module.exports = {
 	name: "add",
@@ -61,7 +62,7 @@ module.exports = {
 
 		ticketData.usersInTicket.push(user.id);
 		ticketData.save();
-
+		sendLog("goed", client.languages.__mf("logger.add.success", { user_mention: `<@${user.id}>`, user_tag: user.tag, channel: interaction.channel.id }))
 		return interaction.reply({embeds: [
 			new MessageEmbed()
 				.setTitle("Ticket System \✅")

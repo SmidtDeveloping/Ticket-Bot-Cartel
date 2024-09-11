@@ -3,6 +3,7 @@ const client = require("../index");
 const dataGuild = require("../models/dataGuild");
 const dataTicket = require("../models/dataTicket");
 const { debug } = require("../controllers/logger");
+const sendLog = require("../handler/discordlogger");
 
 client.on("interactionCreate", async (interaction) => {
 	if (interaction.isButton()) {
@@ -161,7 +162,13 @@ We zullen je zo snel mogelijk laten weten of je bent geselecteerd voor een gespr
 					staffRoles: ticketRoles.map(x => x.id),
 				});
 				await newTicket.save();
-
+				sendLog("goed", client.languages.__mf("commands.open.log", {
+					user_mention: `<@${newTicket.ownerID}>`,
+					channel_name: `<#${newTicket.channelID}>`,
+					link: `https://discordapp.com/channels/${interaction.guild.id}/${newTicket.channelID}`,
+					direct_link: `[Direct Link](https://discordapp.com/channels/${interaction.guild.id}/${newTicket.channelID})`,
+					openSince: `<t:${(Math.floor(newTicket.dateCreated / 1000))}:R>`,
+				}))
 				
 
 				interaction.editReply({

@@ -17,7 +17,7 @@ if (process.version.slice(1).split(".")[0] < 16) {
 class Bot extends Client {
     constructor() {
         super({
-            intents: 32767
+            intents: 50369027
         });
 
         const locales = [];

@@ -38,13 +38,17 @@
 			"user_not_in_ticket": "{user_mention} is niet in dit ticket."
 		},
 		"close": {
-			"closed_by": "{user_mention} heeft het ticket gesloten."
+			"closed_by": "{user_mention} heeft het ticket gesloten.",
+			"log": "{user_mention} heeft {channel} gesloten."
 		},
 		"open": {
-			"opened_by": "{user_mention} heeft het ticket geopend."
+			"opened_by": "{user_mention} heeft het ticket geopend.",
+			"log": "{user_mention} heeft een ticket geopend\n\n**Ticketinformatie**\n » Ticketnaam: {channel_name}\n » Ticket Sinds: {openSince}\n » Ticketlink: {direct_link}"
 		},
 		"rename": {
-			"success": "{user_mention} heeft het ticket hernoemd naar {new_name}."
+			"success": "{user_mention} heeft het ticket hernoemd naar {new_name}.",
+			"log": "{user_mention} heeft {channel} hernoemd naar {new_name}."
+
 		},
 		"alert": {
 			"user_message": "Hallo {user_mention}, je hebt een open [ticket]({link}) en een staflid heeft je nodig om onmiddellijk te reageren\n\n**Ticketinformatie**\n » Ticketnaam: {channel_name}\n » Ticket Sinds: {openSince}\n » Ticketlink: {direct_link}",
@@ -52,7 +56,8 @@
 		},
 		"claim": {
 			"already_claimed": "Dit ticket is al opgeëist door {user_mention}.",
-			"claimed": "Dit ticket is nu opgeëist door {user_mention}."
+			"claimed": "Dit ticket is nu opgeëist door {user_mention}.",
+			"log": "Ticket: {channel}, is nu geclaimed door {user_mention}"
 		},
 		"giveto": {
 			"ticket_not_claimed": "Dit ticket is niet opgeëist.",
@@ -140,6 +145,17 @@
 		"no_permission": "Je hebt geen toestemming om deze opdracht te gebruiken.",
 		"move": {
 			"nocat": "errors.move.nocat"
+		}
+	},
+	"logger": {
+		"add": {
+			"success": "De gebruiker {user_mention} is aan <#{channel}> toegevoegd.",
+			"user_already_in_ticket": "{user_mention} is al in dit ticket."
+			},
+			"alert": {
+			"user_message": "Hallo {user_mention}, je hebt een open [ticket]({link}) en een staflid heeft je nodig om onmiddellijk te reageren\n\n**Ticketinformatie**\n » Ticketnaam: {channel_name}\n » Ticket Sinds: {openSince}\n » Ticketlink: {direct_link}",
+			"staff_message": "Ik heb zojuist een bericht naar de gebruiker gestuurd, wacht op zijn antwoord.",
+			"log_message": "{stafflid} heeft net een alert verzonden naar {user_mention} voor ticket: \n\n**Ticketinformatie**\n » Ticketnaam: {channel_name}\n » Ticket Sinds: {openSince}\n » Ticketlink: {direct_link}"
 		}
 	}
 }

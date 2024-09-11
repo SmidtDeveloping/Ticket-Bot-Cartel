@@ -54,6 +54,11 @@ module.exports = {
 			MANAGE_CHANNELS: true,
 		});
 
+		console.log(ticketData.staffClaimed);
+		ticketData.staffClaimed = user.id
+		ticketData.save()
+		console.log(ticketData.staffClaimed);
+		
 		interaction.reply({embeds: [
 			new MessageEmbed()
 				.setTitle("Ticket System \✅")

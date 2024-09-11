@@ -1,5 +1,6 @@
 const { CommandInteraction, MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
 const { isTicket } = require("../../controllers/ticketChecks");
+const sendLog = require("../../handler/discordlogger");
 
 module.exports = {
 	name: "close",
@@ -43,7 +44,12 @@ module.exports = {
 
 		ticketData.isClosed = true;
 		await ticketData.save();
-
+		
+		
+		sendLog("tussenin", client.languages.__mf("commands.close.log", {
+			user_mention: `<@!${interaction.user.id}>`,
+			channel: `${interaction.channel.name}`
+		}))
 		interaction.reply({embeds: [
 			new MessageEmbed()
 				.setTitle("Ticket System \✅")

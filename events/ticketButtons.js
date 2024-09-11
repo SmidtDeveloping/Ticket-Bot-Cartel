@@ -1,9 +1,15 @@
-const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js")
+const { MessageEmbed, MessageActionRow, MessageButton, CommandInteraction } = require("discord.js")
 const { createTranscript } = require("discord-html-transcripts");
 const dataTicket = require("../models/dataTicket");
 const dataGuild = require("../models/dataGuild");
 const client = require("..");
 const { debug } = require("../controllers/logger");
+
+/**
+ * 
+ * @param {CommandInteraction} interaction
+ * @returns 
+ */
 async function func_createTranscript(interaction) {
 			const userData = await dataTicket.findOne({
 				guildID: interaction.guild.id,
@@ -29,13 +35,19 @@ async function func_createTranscript(interaction) {
 						.setColor("RED")
 				], ephemeral: true});
 			}
-			const transcript = await createTranscript(interaction.channel, {
-				fileName: `transcript-${interaction.channel.name}.html`,
-				limit: -1,
-				returnBuffer: false
-			}).then(() => {
-				debug("Transcript opgeslagen")
-			})
+
+			console.log(interaction.channel);
+			
+			// const transcript = await createTranscript(interaction.channel, {
+			// 	fileName: `transcript-${interaction.channel.name}.html`,
+			// 	returnBuffer: false,
+			// 	limit: -1,
+			// 	}).then(() => {
+			// 	debug("Transcript opgeslagen")
+			// })
+
+			// console.log(transcript);
+			
 			const member = interaction.guild.members.cache.get(userData.ownerID);
 			await transcriptChannel.send({embeds: [
 				new MessageEmbed()
@@ -43,11 +55,11 @@ async function func_createTranscript(interaction) {
 					.addField("Ticket Owner", `<@${userData.ownerID}>`, true)
 					.addField("Ticket Name", interaction.channel.name, true)
 					.setColor("ORANGE")
-			], files: [transcript]}).then((msg) =>  {
+			],}).then((msg) =>  {
 				msg.edit({embeds: [
 					msg.embeds[0]
 						.addField("Panel Name", `${userData.ticketPanel}`, true)
-						.addField("Direct Transcript", `[Direct Transcript](${msg.attachments.first().url})`, true)
+						// .addField("Direct Transcript", `[Direct Transcript](${msg.attachments.first().url})`, true)
 						.addField("Ticket Closed", interaction.user.tag, true)
 						.setColor("GREEN")
 				]});

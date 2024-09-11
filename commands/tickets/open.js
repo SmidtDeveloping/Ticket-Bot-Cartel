@@ -43,7 +43,7 @@ module.exports = {
 
 		ticketData.isClosed = false;
 		await ticketData.save();
-
+	
 		interaction.reply({embeds: [
 			new MessageEmbed()
 				.setTitle("Ticket System \✅")

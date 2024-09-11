@@ -1,6 +1,7 @@
 const { Client, CommandInteraction, MessageEmbed } = require("discord.js");
 const { error } = require("../../controllers/logger");
 const { isTicket } = require("../../controllers/ticketChecks");
+const sendLog = require("../../handler/discordlogger");
 
 module.exports = {
 	name: "alert",
@@ -58,6 +59,17 @@ module.exports = {
 					.setColor("RED")
 			], ephemeral: true});
 		}
+
+		sendLog("goed", client.languages.__mf("logger.alert.log_message", {
+			user_mention: `<@${ticketData.ownerID}>`,
+			user_tag: user.user.tag,
+			channel_id: ticketData.channelID,
+			channel_name: interaction.channel.name,
+			link: `https://discordapp.com/channels/${interaction.guild.id}/${ticketData.channelID}`,
+			direct_link: `[Direct Link](https://discordapp.com/channels/${interaction.guild.id}/${ticketData.channelID})`,
+			openSince: `<t:${(Math.floor(ticketData.dateCreated / 1000))}:R>`,
+			stafflid: `<@${interaction.user.id}>`
+		}))
 
 		return interaction.reply({embeds: [
 			new MessageEmbed()
