@@ -80,6 +80,6 @@ module.exports = {
 					.setEmoji(client.languages.__("buttons.delete.emoji"))
 					.setStyle(client.languages.__("buttons.delete.style"))
 			)
-		], content: ` <@${ticketData.ownerID}> Verder nog vragen? Nee, klik delete`});
+		], content: ` <@${ticketData.ownerID}> Verder nog vragen? Nee, klik "Verwijder"`});
 	},
 };
