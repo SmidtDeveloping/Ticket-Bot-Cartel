@@ -4,6 +4,7 @@ const dataTicket = require("../models/dataTicket");
 const dataGuild = require("../models/dataGuild");
 const client = require("..");
 const { debug } = require("../controllers/logger");
+const sendLog = require("../../handler/discordlogger");
 
 /**
  * 
@@ -101,6 +102,10 @@ client.on("interactionCreate", async (interaction) => {
 			userData.isClosed = true;
 			await userData.save();
 			func_createTranscript(interaction)
+			sendLog("tussenin", client.languages.__mf("commands.close.log", {
+			user_mention: `<@!${interaction.user.id}>`,
+			channel: `${interaction.channel.name}`
+				}))
 			return interaction.channel.send({embeds: [
 				new MessageEmbed()
 					.setTitle("Ticket System \✅")
@@ -133,7 +138,8 @@ client.on("interactionCreate", async (interaction) => {
 						.setEmoji(client.languages.__("buttons.delete.emoji"))
 						.setStyle(client.languages.__("buttons.delete.style"))
 				)
-			], content: ` <@${userData.ownerID}> Verder nog vragen? Nee, klik delete`});
+			], content: ` <@${userData.ownerID}> Verder nog vragen? Nee, klik "Verwijder"`});
+			
 		} else if (buttonID === "claim-ticket-opn") {
 			await interaction.deferUpdate();
 			const userData = await dataTicket.findOne({
